@@ -30,8 +30,7 @@ int main() {
 
     welcome();
 
-// b. Call the readInput() function and get the arrays filled. The list must be ordered by the course numbers. 
-//    This is important for this grade level.
+    readInput(courses, student_count, course_count);
 
     cout << "List of courses and students:" << endl; 
     printList(courses, student_count, course_count);
