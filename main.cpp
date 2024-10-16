@@ -7,10 +7,14 @@
 //*****************************************************************************
 
 #include <iostream>
+#include <cstring> // for strcpy
 
 using namespace std;
 
 const int MAXCHAR = 51;
+const int MAX_COURSES = 20;
+const int MAX_STUDENTS_PER_COURSE = 25;
+const int MIN_STUDENTS_PER_COURSE = 10;
 
 void welcome();
 void readInput(char courseNums[][MAXCHAR + 1], int students[], int &count);
@@ -19,20 +23,29 @@ void printList(char courseNums[][MAXCHAR + 1], int students[], int count);
 void cancelCourses(char courseNums[][MAXCHAR + 1], int students[], int &count);
 
 int main() {
-// a. Declare the arrays for course numbers and students.
+    char courses[MAX_COURSES][MAXCHAR + 1];
+    int student_count[MAX_COURSES];
+    int course_count = 0;
+
+    welcome();
+
 // b. Call the readInput() function and get the arrays filled. The list must be ordered by the course numbers. 
 //    This is important for this grade level.
-// c. Call the printList() function and print the course numbers and students neatly formatted.
-// d. Call the cancelCourses() function and cancel the courses with less than10 students in them.
-// e. Call the printList() function again and print the course numbers and students neatly formatted.
-// f. End your program.
 
+    cout << "List of courses and students:" << endl; 
+    printList(courses, student_count, course_count);
 
+    cancelCourses(courses, student_count, course_count);
+
+    cout << "List after cancellations:" << endl; 
+    printList(courses, student_count, course_count);
+
+    cout << "Thank you for checking out my Course Rosters program!" << endl;
 }
 
 // - This function prints a welcome message to the user.
 void welcome() {
-
+    cout << "Welcome to my Course Rosters program!!" << endl;
 }
 
 
@@ -78,8 +91,28 @@ void readInt(string prompt, int &num) {
 // a. This function takes the 2 arrays and count, uses a for loop and prints the lists to the user.
 // b. Format your list neatly.
 void printList(char courseNums[][MAXCHAR + 1], int students[], int count) {
-
+// List of courses and students:
+// CS133G 7
+// CS160_1 15
+// CS160_2 7
+// CS161A_1 21
+// CS161A_2 25
+// CS161B 23
+// CS162 25
+// CS260 5
+    for(int i = 0; i < count; i++) {
+        cout << courseNums[i] << ' ' << students[i] << endl;
+    }
 }
+
+void removeCourse(char courseNums[][MAXCHAR + 1], int students[], int &count, int pos) {
+    for(int i = pos; i < count - 1; i++) {
+        strcpy(courseNums[i],  courseNums[i + 1]);
+        students[i] = students[i + 1];
+    }
+    count--;
+}
+
 
 // a. This function takes the 2 arrays and the count and removes all courses with less
 //    than 10 students in the course.
@@ -89,5 +122,9 @@ void printList(char courseNums[][MAXCHAR + 1], int students[], int count) {
 // c. Update the count appropriately. If you cancel or remove 3 courses, then count
 //    should be subtracted by 3, so the number of courses is updated.
 void cancelCourses(char courseNums[][MAXCHAR + 1], int students[], int &count) {
-
+    for(int i = 0; i < count; i++) {
+        if(students[i] < MIN_STUDENTS_PER_COURSE) {
+            removeCourse(courseNums, students, count, i);
+        }
+    }
 }
