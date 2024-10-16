@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <cstring> // for strcpy
+#include <limits> //numeric_limits<streamsize>::max()
 
 using namespace std;
 
@@ -74,7 +75,40 @@ void welcome() {
 
 // g. Test your function with at least 10 courses to make sure that the insertion works
 //    correctly.
+
+bool checkQuit(char s[MAXCHAR + 1]) {
+    const char QUIT_SENTINEL[]  = "quit";
+    if(strlen(s) != strlen(QUIT_SENTINEL)) {
+        return false;
+    } else {
+        for(int i = 0; i < strlen(QUIT_SENTINEL); i++) {
+            if(QUIT_SENTINEL[i] != tolower(s[i])) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 void readInput(char courseNums[][MAXCHAR + 1], int students[], int &count) {
+    cout << "Enter course number and students enrolled when prompted." << endl;
+    cout << "Enter Quit or quit for course number when you are done." << endl;
+
+    char temp[MAXCHAR + 1];
+    bool quit = false;
+
+    do {
+        cout << "Enter course number: ";
+        cin >> temp;
+        quit = checkQuit(temp);
+        if(!quit) {
+            strcpy(courseNums[count], temp);
+            int n = 0;
+            readInt("Number of students enrolled:", n);
+            students[count] = n;
+            count++;
+        }
+    } while (!quit);
 
 }
 
@@ -85,7 +119,22 @@ void readInput(char courseNums[][MAXCHAR + 1], int students[], int &count) {
 // c. See Samplea01.cpp for the function. You may use the function in the sample.
 // d. You must catch all invalid data such as characters, negative numbers etc.
 void readInt(string prompt, int &num) {
-
+    bool valid = true;
+    do {
+        valid = true;
+        cout << prompt;
+        cin >> num;
+        if(!cin) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            valid = false;
+        } else if (num < 0 || num > MAX_STUDENTS_PER_COURSE) {
+            valid = false;
+        }
+        if(!valid) {
+            cout << "Invalid number!! Please enter a number between 0 and 25" << endl;
+        }
+    } while (!valid);
 }
 
 // a. This function takes the 2 arrays and count, uses a for loop and prints the lists to the user.
