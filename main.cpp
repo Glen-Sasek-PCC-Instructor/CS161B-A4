@@ -75,13 +75,11 @@ void insertSorted(char courseNums[][MAXCHAR + 1], int students[], int &count, ch
     // Shift right for insert
     for(int i = count; i > pos; i--) {
         // shift right
-        courseNums[i] = courseNums[i-1];
+        strcpy(courseNums[i], courseNums[i-1]);
     }
 
     // Insert
     strcpy(courseNums[pos], courseNum);
-
-    count++;
 }
 
 // a. This function takes an array of c-strings, and an array of ints and reads the
