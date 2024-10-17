@@ -49,6 +49,41 @@ void welcome() {
 }
 
 
+
+
+bool checkQuit(char s[MAXCHAR + 1]) {
+    const char QUIT_SENTINEL[]  = "quit";
+    if(strlen(s) != strlen(QUIT_SENTINEL)) {
+        return false;
+    } else {
+        for(int i = 0; i < strlen(QUIT_SENTINEL); i++) {
+            if(QUIT_SENTINEL[i] != tolower(s[i])) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+void insertSorted(char courseNums[][MAXCHAR + 1], int students[], int &count, char courseNum[MAXCHAR+1]) {
+    // Find insert position
+    int pos = 0;
+    while(pos < count && strcmp(courseNum, courseNums[pos]) > 0) {
+        pos++;
+    }
+
+    // Shift right for insert
+    for(int i = count; i > pos; i--) {
+        // shift right
+        courseNums[i] = courseNums[i-1];
+    }
+
+    // Insert
+    strcpy(courseNums[pos], courseNum);
+
+    count++;
+}
+
 // a. This function takes an array of c-strings, and an array of ints and reads the
 //    course numbers and students enrolled from the user.
 
@@ -74,21 +109,6 @@ void welcome() {
 
 // g. Test your function with at least 10 courses to make sure that the insertion works
 //    correctly.
-
-bool checkQuit(char s[MAXCHAR + 1]) {
-    const char QUIT_SENTINEL[]  = "quit";
-    if(strlen(s) != strlen(QUIT_SENTINEL)) {
-        return false;
-    } else {
-        for(int i = 0; i < strlen(QUIT_SENTINEL); i++) {
-            if(QUIT_SENTINEL[i] != tolower(s[i])) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
 void readInput(char courseNums[][MAXCHAR + 1], int students[], int &count) {
     cout << "Enter course number and students enrolled when prompted." << endl;
     cout << "Enter Quit or quit for course number when you are done." << endl;
@@ -101,7 +121,7 @@ void readInput(char courseNums[][MAXCHAR + 1], int students[], int &count) {
         cin >> temp;
         quit = checkQuit(temp);
         if(!quit) {
-            strcpy(courseNums[count], temp);
+            insertSorted(courseNums, students, count, temp);
             int n = 0;
             readInt("Number of students enrolled:", n);
             students[count] = n;
